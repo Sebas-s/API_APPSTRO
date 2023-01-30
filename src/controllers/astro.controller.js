@@ -27,6 +27,10 @@ const getAstroById = async (req, res) => {
     const { id } = req.params;
     const connection = await getConnection();
     const result = await connection.query(`call findAstroById(${id});`);
+    // if (result[0] == "") {
+    //   console.log(res[0]);
+    //   return res.send("Error: 404 not found");
+    // }
     res.json(result);
   } catch (error) {
     res.status(500);
