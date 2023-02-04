@@ -3,7 +3,7 @@ import { methods as astroController } from "../controllers/astro.controller";
 
 const router = Router();
 
-router.get("/all", astroController.getAstros);
-router.get("/tAstro/", astroController.getTypeAstros);
-router.get("/:id", astroController.getAstroById);
+router.get("/type/:id", astroController.getAstrosByType);
+router.get("/types", astroController.getTypeAstros);
+router.get("/one/:id", astroController.getAstroById);
 export default router;
