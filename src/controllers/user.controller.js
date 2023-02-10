@@ -3,8 +3,10 @@ import { getConnection } from "../database/database";
 const getAllUsers = async (req, res) => {
   try {
     const connection = await getConnection();
-    const result = await connection.query(`call getUsers()`);
-    res.json(result);
+    const result = await connection.query("CALL getUsers;");
+    result[0] == ""
+      ? res.send("Error: 404 not found")
+      : res.json(result[0]);
   } catch (error) {
     res.status(500);
     res.send(error.message);
