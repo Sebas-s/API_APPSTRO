@@ -6,8 +6,10 @@ import userRoutes from "./routes/user.routes";
 
 const app = express();
 
+const port = process.env.PORT || 3000;
+
 // Settings
-app.set("port", 4000);
+app.set("port", port);
 
 // Middlewares
 app.use(morgan("dev"));
