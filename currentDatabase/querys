@@ -1,7 +1,7 @@
 
 
 # Insertar nuevo usuario y validar  si ya existe
-CALL addUser(1, 'Pablo', 'Parquer', 'test2@correo42sd', 'aasd.ocomas','pepe32', @mensaje);
+CALL addUser(id_tipo_user, 'FirstName', 'LastName', 'Email', 'password','username', @mensaje);
 SELECT @mensaje;
 
 
