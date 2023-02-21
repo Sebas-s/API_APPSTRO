@@ -1,0 +1,35 @@
+
+
+# Insertar nuevo usuario y validar  si ya existe
+CALL addUser(1, 'Pablo', 'Parquer', 'test2@correo42sd', 'aasd.ocomas','pepe32', @mensaje);
+SELECT @mensaje;
+
+
+# Obtener todos lo astros 
+CALL getAllAstros();
+
+
+# Obtener astros por tipo:
+CALL getAstrosByType(${id_tipo_astro});
+
+
+#Obtener tipos de astros
+CALL getTypesAstro();
+
+
+#Agregar nuevo astro
+CALL addNewAstro(
+  "name_astro",
+  "typpeAstro",
+  "description",
+  "imgUrl",
+  "mainComposition",
+  "distance")
+
+
+
+
+
+
+
+
