@@ -1,4 +1,4 @@
-import { getConnection } from "../database/database";
+import { getConnection } from "../config/db.config";
 
 const getTypeAstros = async (req, res) => {
   try {
@@ -37,6 +37,17 @@ const getAstroById = async (req, res) => {
       ?  res.send("Error: 404 not found")
       : res.json(result[0]);
   } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+const deleteAstroById = async (req,res) => {
+  try {
+    const { id } = req.params;
+    const connection = await getConnection();
+    await connection.query(`call deleteAstroById(${id})`);
+    res.status(200).json({ message: 'Astro deleted correctly'});
+  } catch (error) {
     res.status(500);
     res.send(error.message);
   }
@@ -46,4 +57,5 @@ export const methods = {
   getAstrosByType,
   getTypeAstros,
   getAstroById,
+  deleteAstroById,
 };
