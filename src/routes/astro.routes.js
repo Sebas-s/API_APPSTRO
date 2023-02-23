@@ -7,4 +7,7 @@ router.get("/type/:id", astroController.getAstrosByType);
 router.get("/types", astroController.getTypeAstros);
 router.get("/one/:id", astroController.getAstroById);
 router.delete("/one/:id", astroController.deleteAstroById);
+router.get("/all", astroController.getAllAstros);
+router.post("/add", astroController.postAstro);
+
 export default router;
