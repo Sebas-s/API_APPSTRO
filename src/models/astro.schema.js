@@ -1,6 +1,3 @@
-const Ajv = require("ajv");
-const ajv = new Ajv();
-
 export const postAstroSchema = {
   type: "object",
   properties: {

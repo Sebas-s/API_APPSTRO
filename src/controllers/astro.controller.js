@@ -1,28 +1,6 @@
-import { getConnection } from "../database/database";
-const Ajv = require("ajv");
+import { getConnection } from "../config/db.config";
+import Ajv from 'ajv';
 const ajv = new Ajv();
-
-const postAstroSchema = {
-  type: "object",
-  properties: {
-    name_astro: { type: "string", minLength: 1 },
-    typpeAstro: { type: "integer", minimum: 1 },
-    description: { type: "string", minLength: 10 },
-    imgUrl: { type: "string", minLength: 10 },
-    mainComposition: { type: "integer", minimum: 1 },
-    distance: { type: "number", minimum: 4 },
-  },
-  required: [
-    "name_astro",
-    "typpeAstro",
-    "description",
-    "imgUrl",
-    "mainComposition",
-    "distance",
-  ],
-  additionalProperties: false,
-};
-
 
 const getAllAstros = async ( res) => {
   try {
@@ -85,12 +63,12 @@ const postAstro = async (req, res) => {
     console.log(req.body);
     const validate = ajv.compile(postAstroSchema);
     const isValid = validate({
-      name_astro :name_astro,
-      typpeAstro:typpeAstro,
-      description:description,
-      imgUrl:imgUrl,
-      mainComposition:mainComposition,
-      distance:distance,
+      name_astro,
+      typpeAstro,
+      description,
+      imgUrl,
+      mainComposition,
+      distance,
     });
 
     if (!isValid) {

@@ -1,8 +1,10 @@
 import {v4 as uuidv4, v4} from 'uuid';
-
+import Ajv from 'ajv';
 import { getConnection } from "../config/db.config";
 import { getToken, getTokenData } from '../config/jwt.config';
-import { sendConfirmationMail } from '../config/mail.config';
+import { postUsersSchema } from '../models/user.schema';
+
+const ajv = new Ajv();
 
 const getAllUsers = async (req, res) => {
   try {
@@ -12,20 +14,23 @@ const getAllUsers = async (req, res) => {
       ? res.send("Error: 404 not found")
       : res.json(result[0]);
   } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const connection = await getConnection();
+    const result = await connection.query(`call findUserById(${id});`);
+    result[0] == ""
+      ?  res.send("Error: 404 not found")
+      : res.json(result[0]);
+  } catch (error) {
     res.status(500);
     res.send(error.message);
   }
 };
-
-const addUser = async (req, res) => {
-try{
-    const{name, tipo, email, contrasenia } = req.body;
-
-}catch{
-
-}
-
-}
 
 const getSessionAcount = async (req, res) => {
   try {
@@ -63,9 +68,6 @@ const createUnregisterUser = async (req,res) => {
 
     const token = getToken({email, code});
 
-    // envio de correo de confirmacion
-    await sendConfirmationMail(email,{fist: fName, last: lName}, token );
-
     // agrega el usuario schema a la base de datos
 
     res.status(200).json({msg: '  Usuario Registrado Correctamente'});
@@ -98,11 +100,55 @@ const confirmAccount = async (req, res) => {
   } catch (error) {
     res.status(405).send(error.message);
   }
+};
+
+const addUser = async (req, res) => {
+  try {
+    const {
+      typeUser,
+      firstName,
+      lastName,
+      email,
+      contrasenia,
+      user,
+    } = req.body;
+
+    let mensaje;
+  
+    const valid = ajv.compile(postUsersSchema);
+    const isValid = valid({
+      typeUser,
+      firstName,
+      lastName,
+      email,
+      contrasenia,
+      user
+    });
+  
+    if (!isValid){
+      throw new Error(valid.errors[0].message);
+    }
+  
+    const connection = await getConnection();
+    await connection.query(
+      `call addUser(${typeUser}, '${firstName}', '${lastName}', '${email}', '${contrasenia}', '${user}')`
+    );
+  
+    console.log(mensaje);
+    if (! mensaje.includes(firstName))
+      res.status(404).send(mensaje);
+    res.status(200).json({ mensaje })
+    
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 }
 
 export const methods = {
   getAllUsers,
+  getUserById,
   getSessionAcount,
   createUnregisterUser,
-  confirmAccount
+  confirmAccount,
+  addUser
 };

@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-
 import { privateK } from './g.config';
 
 
