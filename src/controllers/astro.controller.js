@@ -1,6 +1,5 @@
 import { getConnection } from "../config/db.config";
-import Ajv from 'ajv';
-const ajv = new Ajv();
+import { postAstro } from '../models';
 
 const getAllAstros = async ( res) => {
   try {
@@ -102,7 +101,6 @@ export const methods = {
   getTypeAstros,
   getAstroById,
   deleteAstroById,
-  getAllAstros,
   getAllAstros,
   postAstro,
 };
