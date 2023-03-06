@@ -113,8 +113,6 @@ const addUser = async (req, res) => {
       user,
     } = req.body;
 
-    let mensaje;
-  
     const valid = ajv.compile(postUsersSchema);
     const isValid = valid({
       typeUser,
@@ -131,14 +129,16 @@ const addUser = async (req, res) => {
   
     const connection = await getConnection();
     await connection.query(
-      `call addUser(${typeUser}, '${firstName}', '${lastName}', '${email}', '${contrasenia}', '${user}')`
+      `call addUser(${typeUser}, '${firstName}', '${lastName}', '${email}', '${contrasenia}', '${user}', @mensaje)`
     );
+
+    const message = await connection.query(`SELECT @mensaje`)
+
   
-    console.log(mensaje);
-    if (! mensaje.includes(firstName))
-      res.status(404).send(mensaje);
-    res.status(200).json({ mensaje })
-    
+    console.log('el mensaje seria',message[0]['@mensaje']);
+    message[0]['@mensaje'].includes(firstName)
+    ?  res.status(200).json(message[0])
+    :  res.send(`Error 404: ${message[0]['@mensaje']}`);
   } catch (error) {
     res.status(500).send(error.message);
   }

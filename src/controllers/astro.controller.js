@@ -1,5 +1,5 @@
 import { getConnection } from "../config/db.config";
-import { postAstro } from '../models';
+import { postAstroSchema } from '../models/astro.schema';
 
 const getAllAstros = async ( res) => {
   try {
