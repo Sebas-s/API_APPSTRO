@@ -4,20 +4,29 @@ import morgan from "morgan";
 import astroRoutes from "./routes/astro.routes";
 import userRoutes from "./routes/user.routes";
 
-const app = express();
 
-const port = process.env.PORT || 4000;
+const Apstro = {
+    
+    main:() => {
+        const app = express();
+        
+        const port = process.env.PORT || 4000;
+        
+        // Settings
+        app.set("port", port);
+        
+        // Middlewares
+        app.use(morgan("dev"));
+        app.use(express.json());
+        
+        //Myroutes
+        app.use("/api/astros", astroRoutes);
+        app.use("/api/users", userRoutes);
+        
+        // start the server
+        app.listen(app.get("port"));
+        console.log(`Server on port ${app.get("port")}`);    
+    }
+};
 
-// Settings
-app.set("port", port);
-
-// Middlewares
-app.use(morgan("dev"));
-app.use(express.json());
-
-
-//Myroutes
-app.use("/api/astros", astroRoutes);
-app.use("/api/users", userRoutes);
-
-export default app;
+export default Apstro;

@@ -1,4 +1,9 @@
-import { getConnection } from "../database/database";
+import Ajv from 'ajv';
+import { getConnection } from "../config/db.config";
+import { getToken, getTokenData } from '../config/jwt.config';
+import { postUsersSchema } from '../models/user.schema';
+
+const ajv = new Ajv();
 
 const getAllUsers = async (req, res) => {
   try {
@@ -8,40 +13,53 @@ const getAllUsers = async (req, res) => {
       ? res.send("Error: 404 not found")
       : res.json(result[0]);
   } catch (error) {
-    res.status(500);
-    res.send(error.message);
+    res.status(500).send(error.message);
   }
 };
 
-const addUser =async(req, res)=>{
-try{
-    const{name, tipo, email, contraseña } = req.body
-}catch{
-
-}
-
-}
-
-
-const addLanguage = async (req, res) => {
+const addUser = async (req, res) => {
   try {
-      const { name, programmers } = req.body;
+    const {
+      typeUser,
+      firstName,
+      lastName,
+      email,
+      contrasenia,
+      user,
+    } = req.body;
 
-      if (name === undefined || programmers === undefined) {
-          res.status(400).json({ message: "Bad Request. Please fill all field." });
-      }
+    const valid = ajv.compile(postUsersSchema);
+    const isValid = valid({
+      typeUser,
+      firstName,
+      lastName,
+      email,
+      contrasenia,
+      user
+    });
+  
+    if (!isValid){
+      throw new Error(valid.errors[0].message);
+    }
+  
+    const connection = await getConnection();
+    await connection.query(
+      `call addUser(${typeUser}, '${firstName}', '${lastName}', '${email}', '${contrasenia}', '${user}', @mensaje)`
+    );
 
-      const language = { name, programmers };
-      const connection = await getConnection();
-      await connection.query("INSERT INTO language SET ?", language);
-      res.json({ message: "Language added" });
+    const message = await connection.query(`SELECT @mensaje`)
+
+  
+    console.log('el mensaje seria',message[0]['@mensaje']);
+    message[0]['@mensaje'].includes(firstName)
+    ?  res.status(200).json(message[0])
+    :  res.send(`Error 200: ${message[0]['@mensaje']}`);
   } catch (error) {
-      res.status(500);
-      res.send(error.message);
+    res.status(500).send(error.message);
   }
-};
-
+}
 
 export const methods = {
-  getAllUsers
+  getAllUsers,
+  addUser
 };
