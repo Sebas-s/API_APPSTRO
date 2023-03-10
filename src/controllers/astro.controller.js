@@ -4,10 +4,10 @@ import { postAstroSchema } from '../models/astro.schema';
 const getAllAstros = async (req,res) => {
   try {
     const results = await sequelize.query("CALL getAllAstros()", {
-      type: sequelize.QueryTypes.SELECT,
+      type: sequelize.QueryTypes.RAW,
     });
     console.log(results);
-    results[0] === undefined ? res.send("Error: 404 not found") : res.json(results[0]);
+    results === undefined ? res.send("Error: 404 not found") : res.json(results)
   } catch (error) {
     res.status(500);
     res.send(error.message);
