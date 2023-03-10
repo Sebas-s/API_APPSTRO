@@ -96,14 +96,6 @@ const postAstro = async (req, res) => {
   }
 };
 
-/*const results = await sequelize.query("",{
-      type: sequelize.QueryTypes.RAW,
-    });
-    
-    results == "" ? res.send("Error: 404 not found") : res.json(results);
-    
-    */
-
 const deleteAstroById = async (req, res) => {
   try {
     const { id } = req.params;
