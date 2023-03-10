@@ -53,7 +53,7 @@ const addUser = async (req, res) => {
     console.log('el mensaje seria',message[0]['@mensaje']);
     message[0]['@mensaje'].includes(firstName)
     ?  res.status(200).json(message[0])
-    :  res.send(`Error 404: ${message[0]['@mensaje']}`);
+    :  res.send(`Error 200: ${message[0]['@mensaje']}`);
   } catch (error) {
     res.status(500).send(error.message);
   }
