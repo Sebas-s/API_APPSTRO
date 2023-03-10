@@ -1,16 +1,19 @@
-import { getConnection } from "../config/db.config";
+import { sequelize } from "../config/db.config";
 import { postAstroSchema } from '../models/astro.schema';
 
-const getAllAstros = async ( res) => {
+const getAllAstros = async (req,res) => {
   try {
-    const connection = await getConnection();
-    const result = await connection.query("CALL getAllAstros()");
-    result[0] == "" ? res.send("Error: 404 not found") : res.json(result[0]);
+    const results = await sequelize.query("CALL getAllAstros()", {
+      type: sequelize.QueryTypes.SELECT,
+    });
+    console.log(results);
+    results[0] === undefined ? res.send("Error: 404 not found") : res.json(results[0]);
   } catch (error) {
     res.status(500);
     res.send(error.message);
   }
 };
+
 
 const getTypeAstros = async (req, res) => {
   try {
