@@ -5,9 +5,9 @@ config();
 export default {
     domain: process.nextTick.DOMAIN || "",
     host: process.env.HOST || "",
-    database: process.env.DATABASE || "",
-    user: process.env.USER || "",
-    password: process.env.PASSWORD || "",
+    database: process.env.DB || "",
+    user: process.env.DB_USER || "",
+    password: process.env.DB_PASSWORD || "",
     privateK: process.env.JWTPRIVATEKEY || ""
 };
 
