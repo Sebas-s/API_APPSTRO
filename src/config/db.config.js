@@ -1,18 +1,16 @@
-import mysql from "promise-mysql";
+import Sequelize from "sequelize";
 import config from "./g.config";
 
-const connection = mysql.createConnection({
+export const sequelize = new Sequelize(
+  config.database,
+  config.user,
+  config.password,
+  {
     host: config.host,
-    database: config.database,
-    user: config.user,
-    password: config.password,
-    port: config.sqlPort
-});
-
-const getConnection = () => {
-    return connection;
-};
+    dialect: "mysql",
+  }
+);
 
 module.exports = {
-    getConnection
+  sequelize,
 };

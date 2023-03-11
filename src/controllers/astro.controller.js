@@ -1,11 +1,16 @@
-import { getConnection } from "../config/db.config";
-import { postAstroSchema } from '../models/astro.schema';
+import { sequelize } from "../config/db.config";
+import { postAstroSchema } from "../models/astro.schema";
+const Ajv = require("ajv");
+const ajv = new Ajv();
 
-const getAllAstros = async ( res) => {
+const getAllAstros = async (req, res) => {
   try {
-    const connection = await getConnection();
-    const result = await connection.query("CALL getAllAstros()");
-    result[0] == "" ? res.send("Error: 404 not found") : res.json(result[0]);
+    const results = await sequelize.query("CALL getAllAstros()", {
+      type: sequelize.QueryTypes.RAW,
+    });
+    results === undefined
+      ? res.send("Error: 404 not found")
+      : res.json(results);
   } catch (error) {
     res.status(500);
     res.send(error.message);
@@ -14,9 +19,10 @@ const getAllAstros = async ( res) => {
 
 const getTypeAstros = async (req, res) => {
   try {
-    const connection = await getConnection();
-    const result = await connection.query("CALL getTypesAstro();");
-    result[0] == "" ? res.send("Error: 404 not found") : res.json(result[0]);
+    const results = await sequelize.query("CALL getTypesAstro();", {
+      type: sequelize.QueryTypes.RAW,
+    });
+    results == "" ? res.send("Error: 404 not found") : res.json(results);
   } catch (error) {
     res.status(500);
     res.send(error.message);
@@ -26,9 +32,11 @@ const getTypeAstros = async (req, res) => {
 const getAstrosByType = async (req, res) => {
   try {
     const { id } = req.params;
-    const connection = await getConnection();
-    const result = await connection.query(`call getAstrosByType(${id})`);
-    result[0] == "" ? res.send("Error: 404 not found") : res.json(result[0]);
+    const results = await sequelize.query(`call getAstrosByType(${id})`, {
+      type: sequelize.QueryTypes.RAW,
+    });
+
+    results == "" ? res.send("Error: 404 not found") : res.json(results);
   } catch (error) {
     res.status(500);
     res.send(error.message);
@@ -38,11 +46,11 @@ const getAstrosByType = async (req, res) => {
 const getAstroById = async (req, res) => {
   try {
     const { id } = req.params;
-    const connection = await getConnection();
-    const result = await connection.query(`call findAstroById(${id});`);
-    result[0] == ""
-      ?  res.send("Error: 404 not found")
-      : res.json(result[0]);
+    const results = await sequelize.query(`call findAstroById(${id});`, {
+      type: sequelize.QueryTypes.RAW,
+    });
+
+    results == "" ? res.send("Error: 404 not found") : res.json(results);
   } catch (error) {
     res.status(500);
     res.send(error.message);
@@ -73,10 +81,14 @@ const postAstro = async (req, res) => {
     if (!isValid) {
       throw new Error(validate.errors[0].message);
     }
-    const connection = await getConnection();
-    await connection.query(
-      `call addNewAstro('${name_astro}',${typpeAstro},'${description}','${imgUrl}',${mainComposition},${distance})`
+
+    await sequelize.query(
+      `call addNewAstro('${name_astro}',${typpeAstro},'${description}','${imgUrl}',${mainComposition},${distance})`,
+      {
+        type: sequelize.QueryTypes.RAW,
+      }
     );
+
     res.status(200);
     res.send("El astro ha sido insertado correctamente");
   } catch (error) {
@@ -84,17 +96,17 @@ const postAstro = async (req, res) => {
   }
 };
 
-const deleteAstroById = async (req,res) => {
+const deleteAstroById = async (req, res) => {
   try {
     const { id } = req.params;
-    const connection = await getConnection();
-    await connection.query(`call deleteAstroById(${id})`);
-    res.status(200).json({ message: 'Astro deleted correctly'});
+    await sequelize.query(`call deleteAstroById(${id})`, {
+      type: sequelize.QueryTypes.RAW,
+    });
+    res.status(200).json({ message: "Astro deleted correctly" });
   } catch (error) {
     res.status(500).send(error.message);
   }
 };
-
 
 export const methods = {
   getAstrosByType,
