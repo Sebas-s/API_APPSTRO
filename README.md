@@ -31,7 +31,7 @@
 #### Una vez todo este correcatamente configurado deberas iniciar el servidor 
     npm run dev
     
-#### Deveras ver la siguiente inpresion en consola:
+#### Deveras ver el siguente mensaje en consola:
 
 ![image](https://user-images.githubusercontent.com/85807291/225961323-44c3e64f-1f38-4e5b-9bec-a00524ed31d3.png)
 
